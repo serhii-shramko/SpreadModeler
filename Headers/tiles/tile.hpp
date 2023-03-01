@@ -11,6 +11,8 @@ public:
 
   tile_type get_type() { return m_type; };
 
+  bool has_humans() { return m_space.has_humans(); };
+
 private:
   unsigned long m_id;
   tile_type m_type;

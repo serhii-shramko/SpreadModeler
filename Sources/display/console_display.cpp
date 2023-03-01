@@ -1,5 +1,5 @@
-#include "pch.hpp"
 #include "console_display.hpp"
+#include "pch.hpp"
 
 namespace sprsim {
 
@@ -25,7 +25,10 @@ static char type_to_char(tile_type type) {
 void console_dislpay::showField(field &f) {
   for (auto &row : f.get()) {
     for (auto &el : row) {
-      std::cout << type_to_char(el->get_type());
+      if (el->has_humans())
+        std::cout << '@';
+      else
+        std::cout << type_to_char(el->get_type());
     }
     std::cout << '\n';
   }
