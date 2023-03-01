@@ -1,6 +1,19 @@
 #include "city_map.hpp"
 
 namespace sprsim {
+
+std::unordered_map<char, tile_type> city_map::s_tile_char_map = {
+    {'.', EMPTY}, {'#', ROAD},     {'S', SCHOOL},
+    {'W', WORK},  {'H', HOSPITAL}, {'^', HOME}};
+
+tile_type city_map::get_type_of(char c) {
+  try {
+    return s_tile_char_map.at(c);
+  } catch (const std::out_of_range &) {
+  };
+  return tile_type::UNKNOWN;
+}
+
 city_map::city_map(const std::string &filename) {
   std::ifstream ifile(filename);
   if (!ifile.is_open())

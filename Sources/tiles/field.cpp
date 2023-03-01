@@ -15,11 +15,13 @@ field::~field() {
 
 template <typename... Args>
 static tile *char_to_tile(char c, Args... args) {
-  switch (c) {
-  case '#':
+  switch (city_map::get_type_of(c)) {
+  case tile_type::ROAD:
     return new road(std::forward<Args>(args)...);
-  case '^':
+  case tile_type::HOME:
     return new home(std::forward<Args>(args)...);
+  default:
+    break;
   }
   return new road(std::forward<Args>(args)...);
 }
