@@ -10,7 +10,7 @@ file(GLOB HEADDIRS "./Headers/*")
 include_directories(${HEADDIRS})
 
 file(GLOB_RECURSE SRCFILES "./Sources/*.cpp")
-add_executable(${PROJECT_NAME} ${SRCFILES})
+add_executable(${PROJECT_NAME} ${SRCFILES} ${PRECOMPILED_HEADER_FILE})
 
 set(PRECOMPILED_HEADER_FILE "./Headers/pch/pch.hpp")
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${PRECOMPILED_HEADER_FILE})

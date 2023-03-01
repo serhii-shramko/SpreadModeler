@@ -1,8 +1,12 @@
-#include "pch.hpp"
 #include "field.hpp"
+#include "pch.hpp"
 
+#include "empty.hpp"
 #include "home.hpp"
+#include "hospital.hpp"
 #include "road.hpp"
+#include "school.hpp"
+#include "work.hpp"
 
 namespace sprsim {
 
@@ -17,14 +21,21 @@ field::~field() {
 template <typename... Args>
 static tile *char_to_tile(char c, Args... args) {
   switch (city_map::get_type_of(c)) {
+  case tile_type::EMPTY:
+    return new empty(std::forward<Args>(args)...);
   case tile_type::ROAD:
     return new road(std::forward<Args>(args)...);
+  case tile_type::SCHOOL:
+    return new school(std::forward<Args>(args)...);
+  case tile_type::WORK:
+    return new work(std::forward<Args>(args)...);
+  case tile_type::HOSPITAL:
+    return new hospital(std::forward<Args>(args)...);
   case tile_type::HOME:
     return new home(std::forward<Args>(args)...);
   default:
-    break;
+    return new empty(std::forward<Args>(args)...);
   }
-  return new road(std::forward<Args>(args)...);
 }
 
 field::field(const city_map &map) {
