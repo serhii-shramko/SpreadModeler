@@ -1,6 +1,5 @@
+#include "pch.hpp"
 #include "console_display.hpp"
-
-#include <iostream>
 
 namespace sprsim {
 

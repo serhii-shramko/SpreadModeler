@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "interaction_space.hpp"
 
 namespace sprsim {

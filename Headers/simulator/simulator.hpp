@@ -6,7 +6,6 @@
 #include "human.hpp"
 #include "types.hpp"
 
-#include <iostream>
 #include <memory>
 #include <vector>
 

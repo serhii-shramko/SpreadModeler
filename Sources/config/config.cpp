@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "config.hpp"
 
 namespace sprsim {

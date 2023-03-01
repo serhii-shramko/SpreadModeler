@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "city_map.hpp"
 
 namespace sprsim {

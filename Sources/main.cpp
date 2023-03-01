@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "console_display.hpp"
 #include "simulator.hpp"
 

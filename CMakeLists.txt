@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 
 project(SpreadModeler)
 
@@ -11,3 +11,6 @@ include_directories(${HEADDIRS})
 
 file(GLOB_RECURSE SRCFILES "./Sources/*.cpp")
 add_executable(${PROJECT_NAME} ${SRCFILES})
+
+set(PRECOMPILED_HEADER_FILE "./Headers/pch/pch.hpp")
+target_precompile_headers(${PROJECT_NAME} PRIVATE ${PRECOMPILED_HEADER_FILE})

@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "tile.hpp"
 
 namespace sprsim {

@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "simulator.hpp"
 
 namespace sprsim {
