@@ -1,5 +1,5 @@
-#include "pch.hpp"
 #include "school.hpp"
+#include "pch.hpp"
 
 namespace sprsim {
 

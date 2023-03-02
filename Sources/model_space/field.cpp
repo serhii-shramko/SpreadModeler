@@ -38,6 +38,37 @@ static tile *char_to_tile(char c, Args... args) {
   }
 }
 
+static void resolve_directions(field::field_container &field) {
+  auto rows = field.size();
+  auto cols = field.at(0).size();
+  for (std::size_t i = 0; i < rows; i++) {
+    for (std::size_t j = 0; j < cols; j++) {
+      directions dirs;
+      if (i == 0) {
+        dirs.north = nullptr;
+      } else {
+        dirs.north = field.at(i - 1).at(j);
+      }
+      if (i == rows - 1) {
+        dirs.south = nullptr;
+      } else {
+        dirs.south = field.at(i + 1).at(j);
+      }
+      if (j == 0) {
+        dirs.west = nullptr;
+      } else {
+        dirs.west = field.at(i).at(j - 1);
+      }
+      if (j == cols - 1) {
+        dirs.east = nullptr;
+      } else {
+        dirs.east = field.at(i).at(j + 1);
+      }
+      field.at(i).at(j)->set_directions(dirs);
+    }
+  }
+}
+
 field::field(const city_map &map) {
   unsigned long id = 0;
   for (const auto &line : map.get()) {
@@ -49,6 +80,7 @@ field::field(const city_map &map) {
     }
     m_field.emplace_back(std::move(temp));
   }
+  resolve_directions(m_field);
 }
 
 } // namespace sprsim

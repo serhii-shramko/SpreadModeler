@@ -1,5 +1,5 @@
-#include "pch.hpp"
 #include "hospital.hpp"
+#include "pch.hpp"
 
 namespace sprsim {
 

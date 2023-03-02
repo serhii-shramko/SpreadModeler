@@ -1,5 +1,5 @@
-#include "pch.hpp"
 #include "simulator.hpp"
+#include "pch.hpp"
 
 namespace sprsim {
 simulator::~simulator() {
@@ -24,9 +24,9 @@ void simulator::create_humans() {
   const long humans_count = m_config.get<long>("humans_count");
   m_all_humans.reserve(humans_count);
   for (long i = 0; i < humans_count; i++)
-    m_all_humans.push_back(new human());
+    m_all_humans.push_back(new human(m_field.get_tile(0, 0)));
 }
-
+#include <unistd.h>
 void simulator::simulation_loop() {
   const long sim_years = m_config.get<long>("sim_years");
   const long sim_months = m_config.get<long>("sim_months");
@@ -35,7 +35,11 @@ void simulator::simulation_loop() {
       (sim_years * 365 + sim_months * 30 + sim_days) * 1440;
 
   for (simtime_t curr_time = 0; curr_time < sim_time; curr_time++) {
-    if (curr_time % 1000 == 0) {
+    for (auto &el : m_all_humans) {
+      el->do_action();
+    }
+    sleep(1);
+    if (curr_time % 1 == 0) {
       // system("clear");
       std::cout << "Current time " << curr_time << std::endl;
       m_display->showField(m_field);
