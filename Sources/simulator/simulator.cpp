@@ -35,9 +35,12 @@ void simulator::simulation_loop() {
       (sim_years * 365 + sim_months * 30 + sim_days) * 1440;
 
   for (simtime_t curr_time = 0; curr_time < sim_time; curr_time++) {
-    if (curr_time % 1000 == 0) {
+    if (curr_time % 1 == 0) {
       std::cout << "Current time " << curr_time << std::endl;
       m_display->showField(m_field);
+    }
+    for (auto el : m_all_humans) {
+      el->do_action();
     }
   }
 }
