@@ -5,7 +5,6 @@
 #include "home.hpp"
 #include "hospital.hpp"
 #include "road.hpp"
-#include "school.hpp"
 #include "work.hpp"
 
 namespace sprsim {
@@ -25,8 +24,6 @@ static tile *char_to_tile(char c, Args... args) {
     return new empty(std::forward<Args>(args)...);
   case tile_type::ROAD:
     return new road(std::forward<Args>(args)...);
-  case tile_type::SCHOOL:
-    return new school(std::forward<Args>(args)...);
   case tile_type::WORK:
     return new work(std::forward<Args>(args)...);
   case tile_type::HOSPITAL:
@@ -69,6 +66,92 @@ static void resolve_directions(field::field_container &field) {
   }
 }
 
+static void print_this(std::vector<tile *> v, std::size_t cols) {
+  for (auto el : v) {
+    auto i = el->get_id() / cols;
+    auto j = el->get_id() % cols;
+    std::cout << "t: " << el->get_type() << " id: " << el->get_id()
+              << " i: " << i << " j: " << j << '\n';
+  }
+}
+
+static void check_tile(tile *t, std::list<tile *> &vec, way w) {
+  if (t && t->get_type() == tile_type::ROAD) {
+    if (!t->has_way(w)) {
+      t->add_way(w);
+      vec.push_back(t);
+    }
+  }
+}
+
+static void set_way(std::list<tile *> &vec, way w) {
+  tile *t = *vec.begin();
+  auto dirs = t->get_direction();
+  w.cardin = cardinals::SOUTH;
+  check_tile(dirs.north, vec, w);
+
+  w.cardin = cardinals::NORTH;
+  check_tile(dirs.south, vec, w);
+
+  w.cardin = cardinals::WEST;
+  check_tile(dirs.east, vec, w);
+
+  w.cardin = cardinals::EAST;
+  check_tile(dirs.west, vec, w);
+}
+
+static void resolve_one_way(tile *t) {
+  way w;
+  w.id = t->get_id();
+  w.type = t->get_type();
+  std::list<tile *> vec;
+  vec.push_back(t);
+  while (!vec.empty()) {
+    set_way(vec, w);
+    vec.erase(vec.begin());
+  }
+}
+
+static void resolve_ways(field::field_container &field) {
+  std::vector<tile *> importans;
+  for (auto &row : field) {
+    for (auto el : row) {
+      if (el->get_type() == tile_type::HOME) {
+        importans.push_back(el);
+        continue;
+      }
+      if (el->get_type() == tile_type::WORK) {
+        importans.push_back(el);
+        continue;
+      }
+      if (el->get_type() == tile_type::HOSPITAL) {
+        importans.push_back(el);
+        continue;
+      }
+    }
+  }
+  auto cols = field.at(0).size();
+  std::cout << "Places\n";
+  print_this(importans, cols);
+  for (auto el : importans) {
+    resolve_one_way(el);
+  }
+  for (auto &row : field) {
+    for (auto el : row) {
+      if (el->get_type() == tile_type::ROAD) {
+        auto i = el->get_id() / cols;
+        auto j = el->get_id() % cols;
+        std::cout << "Road at " << i << " " << j << "\n";
+        for (auto one_way : el->get_ways()) {
+          std::cout << "    id: " << one_way.id
+                    << " cardin: " << (int)one_way.cardin
+                    << " type: " << one_way.type << "\n";
+        }
+      }
+    }
+  }
+}
+
 field::field(const city_map &map) {
   unsigned long id = 0;
   for (const auto &line : map.get()) {
@@ -81,6 +164,7 @@ field::field(const city_map &map) {
     m_field.emplace_back(std::move(temp));
   }
   resolve_directions(m_field);
+  resolve_ways(m_field);
 }
 
 } // namespace sprsim

@@ -9,8 +9,6 @@ static char type_to_char(tile_type type) {
     return '.';
   case tile_type::ROAD:
     return '#';
-  case tile_type::SCHOOL:
-    return 'S';
   case tile_type::HOSPITAL:
     return 'H';
   case tile_type::WORK:
