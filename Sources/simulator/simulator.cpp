@@ -24,7 +24,9 @@ void simulator::create_humans() {
   const long humans_count = m_config.get<long>("humans_count");
   m_all_humans.reserve(humans_count);
   for (long i = 0; i < humans_count; i++)
-    m_all_humans.push_back(new human(m_field.get_tile(0, 0)));
+    m_all_humans.push_back(new human());
+
+  m_field.add_humans(m_all_humans);
 }
 
 void simulator::simulation_loop() {
@@ -36,7 +38,7 @@ void simulator::simulation_loop() {
 
   for (simtime_t curr_time = 0; curr_time < sim_time; curr_time++) {
     if (curr_time % 1 == 0) {
-      std::cout << "Current time " << curr_time << std::endl;
+      std::cout << "Current time " << curr_time << "/" << sim_time << "\n";
       m_display->showField(m_field);
     }
     for (auto el : m_all_humans) {

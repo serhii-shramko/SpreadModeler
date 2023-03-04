@@ -1,6 +1,6 @@
 #pragma once
 
-#include "position2.hpp"
+#include "registration.hpp"
 #include "types.hpp"
 
 namespace sprsim {
@@ -8,23 +8,21 @@ class tile;
 
 class human {
 public:
-  using position = position2<unsigned long>;
-
-  human(tile *intile);
+  human();
   void do_action();
+  void set_position(tile *place);
+
+  void set_registration(registration regs) { m_registration = regs; }
 
 private:
   void move_to(tile *place);
-  tile* find_road();
+  tile *find_road();
 
 private:
-  unsigned long m_id;
-  position m_pos;
   simtime_t m_next_action_time;
   bool m_is_ill;
   tile *m_current_tile;
-  unsigned long work_id;
-  unsigned long home_id;
+  registration m_registration;
   int current_state;
 };
 } // namespace sprsim

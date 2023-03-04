@@ -1,4 +1,5 @@
 #include "field.hpp"
+#include "human.hpp"
 #include "pch.hpp"
 
 #include "empty.hpp"
@@ -66,15 +67,6 @@ static void resolve_directions(field::field_container &field) {
   }
 }
 
-static void print_this(std::vector<tile *> v, std::size_t cols) {
-  for (auto el : v) {
-    auto i = el->get_id() / cols;
-    auto j = el->get_id() % cols;
-    std::cout << "t: " << el->get_type() << " id: " << el->get_id()
-              << " i: " << i << " j: " << j << '\n';
-  }
-}
-
 static void check_tile(tile *t, std::list<tile *> &lis, unsigned int id,
                        cardinals card) {
   if (t && t->get_type() == tile_type::ROAD)
@@ -98,9 +90,9 @@ static void resolve_one_way(tile *in_tile) {
   }
 }
 
-static void resolve_ways(field::field_container &field) {
+static void resolve_ways(field::field_container &f) {
   std::vector<tile *> importans;
-  for (auto &row : field) {
+  for (auto &row : f) {
     for (auto el : row) {
       switch (el->get_type()) {
       case tile_type::HOME:
@@ -112,24 +104,9 @@ static void resolve_ways(field::field_container &field) {
       }
     }
   }
-  auto cols = field.at(0).size();
-  std::cout << "Places\n";
-  print_this(importans, cols);
+
   for (auto el : importans) {
     resolve_one_way(el);
-  }
-  for (auto &row : field) {
-    for (auto el : row) {
-      if (el->get_type() == tile_type::ROAD) {
-        auto i = el->get_id() / cols;
-        auto j = el->get_id() % cols;
-        std::cout << "Road at " << i << " " << j << "\n";
-        for (auto one_way : el->get_ways()) {
-          std::cout << "    id: " << one_way.first
-                    << " cardin: " << (int)one_way.second << "\n";
-        }
-      }
-    }
   }
 }
 
@@ -139,13 +116,38 @@ field::field(const city_map &map) {
     std::vector<tile *> temp;
     temp.reserve(line.size());
     for (auto c : line) {
-      temp.push_back(char_to_tile(c, id)); // TODO: add choose type of tile
+      temp.push_back(char_to_tile(c, id));
       id++;
     }
     m_field.emplace_back(std::move(temp));
   }
   resolve_directions(m_field);
   resolve_ways(m_field);
+}
+
+void field::add_humans(const std::vector<human *> vec) {
+  std::vector<tile *> homes;
+  std::vector<tile *> works;
+  std::vector<tile *> hospitals;
+  for (auto &row : m_field)
+    for (auto &el : row) {
+      if (el->get_type() == tile_type::HOME)
+        homes.push_back(el);
+      if (el->get_type() == tile_type::WORK)
+        works.push_back(el);
+      if (el->get_type() == tile_type::HOSPITAL)
+        hospitals.push_back(el);
+    }
+
+  for (std::size_t i = 0; i < vec.size(); i++) {
+    auto home = homes.at(i % homes.size());
+    auto work = works.at(i % works.size());
+    auto hospital = hospitals.at(i % hospitals.size());
+
+    vec.at(i)->set_position(home);
+    vec.at(i)->set_registration(
+        registration(work->get_id(), home->get_id(), hospital->get_id()));
+  }
 }
 
 } // namespace sprsim
