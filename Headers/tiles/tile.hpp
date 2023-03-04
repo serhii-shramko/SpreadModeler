@@ -3,13 +3,14 @@
 #include "directions.hpp"
 #include "interaction_space.hpp"
 #include "types.hpp"
-#include "way.hpp"
 
-#include <vector>
+#include <unordered_map>
 
 namespace sprsim {
 class tile {
 public:
+  using ways = std::unordered_map<unsigned long, cardinals>;
+
   virtual ~tile() = default;
 
   unsigned long get_id() { return m_id; }
@@ -26,18 +27,12 @@ public:
 
   void release_human(human *h) { m_space.release_human(h); }
 
-  bool has_way(way w) {
-    for (auto &el : m_ways) {
-      if (el.id == w.id) {
-        return true;
-      }
-    }
-    return false;
+  bool add_way(unsigned long id, cardinals card) {
+    auto [it, b] = m_ways.insert({id, card});
+    return b;
   }
 
-  void add_way(way w) { m_ways.push_back(w); }
-
-  std::vector<way> get_ways() { return m_ways; }
+  ways get_ways() { return m_ways; }
 
 protected:
   tile(unsigned long id, tile_type type);
@@ -47,6 +42,6 @@ protected:
   tile_type m_type;
   interaction_space m_space;
   directions m_directions;
-  std::vector<way> m_ways;
+  ways m_ways;
 };
 } // namespace sprsim

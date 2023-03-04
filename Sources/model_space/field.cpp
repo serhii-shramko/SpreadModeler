@@ -75,40 +75,26 @@ static void print_this(std::vector<tile *> v, std::size_t cols) {
   }
 }
 
-static void check_tile(tile *t, std::list<tile *> &vec, way w) {
-  if (t && t->get_type() == tile_type::ROAD) {
-    if (!t->has_way(w)) {
-      t->add_way(w);
-      vec.push_back(t);
-    }
-  }
+static void check_tile(tile *t, std::list<tile *> &lis, unsigned int id,
+                       cardinals card) {
+  if (t && t->get_type() == tile_type::ROAD)
+    if (t->add_way(id, card))
+      lis.push_back(t);
 }
 
-static void set_way(std::list<tile *> &vec, way w) {
-  tile *t = *vec.begin();
-  auto dirs = t->get_direction();
-  w.cardin = cardinals::SOUTH;
-  check_tile(dirs.north, vec, w);
+static void resolve_one_way(tile *in_tile) {
+  auto id = in_tile->get_id();
+  std::list<tile *> lis;
+  lis.push_back(in_tile);
 
-  w.cardin = cardinals::NORTH;
-  check_tile(dirs.south, vec, w);
-
-  w.cardin = cardinals::WEST;
-  check_tile(dirs.east, vec, w);
-
-  w.cardin = cardinals::EAST;
-  check_tile(dirs.west, vec, w);
-}
-
-static void resolve_one_way(tile *t) {
-  way w;
-  w.id = t->get_id();
-  w.type = t->get_type();
-  std::list<tile *> vec;
-  vec.push_back(t);
-  while (!vec.empty()) {
-    set_way(vec, w);
-    vec.erase(vec.begin());
+  while (!lis.empty()) {
+    tile *t = *lis.begin();
+    auto dirs = t->get_direction();
+    check_tile(dirs.north, lis, id, cardinals::SOUTH);
+    check_tile(dirs.south, lis, id, cardinals::NORTH);
+    check_tile(dirs.east, lis, id, cardinals::WEST);
+    check_tile(dirs.west, lis, id, cardinals::EAST);
+    lis.erase(lis.begin());
   }
 }
 
@@ -116,17 +102,13 @@ static void resolve_ways(field::field_container &field) {
   std::vector<tile *> importans;
   for (auto &row : field) {
     for (auto el : row) {
-      if (el->get_type() == tile_type::HOME) {
+      switch (el->get_type()) {
+      case tile_type::HOME:
+      case tile_type::WORK:
+      case tile_type::HOSPITAL:
         importans.push_back(el);
-        continue;
-      }
-      if (el->get_type() == tile_type::WORK) {
-        importans.push_back(el);
-        continue;
-      }
-      if (el->get_type() == tile_type::HOSPITAL) {
-        importans.push_back(el);
-        continue;
+      default:
+        break;
       }
     }
   }
@@ -143,9 +125,8 @@ static void resolve_ways(field::field_container &field) {
         auto j = el->get_id() % cols;
         std::cout << "Road at " << i << " " << j << "\n";
         for (auto one_way : el->get_ways()) {
-          std::cout << "    id: " << one_way.id
-                    << " cardin: " << (int)one_way.cardin
-                    << " type: " << one_way.type << "\n";
+          std::cout << "    id: " << one_way.first
+                    << " cardin: " << (int)one_way.second << "\n";
         }
       }
     }

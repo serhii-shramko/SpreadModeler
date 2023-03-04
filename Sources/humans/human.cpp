@@ -58,8 +58,8 @@ void human::do_action() {
     }
     auto ways = m_current_tile->get_ways();
     for (auto el : ways) {
-      if (work_id == el.id) {
-        move_to(cardinal_to_tile(m_current_tile, el.cardin));
+      if (work_id == el.first) {
+        move_to(cardinal_to_tile(m_current_tile, el.second));
         break;
       }
     }
@@ -72,8 +72,8 @@ void human::do_action() {
     }
     auto ways = m_current_tile->get_ways();
     for (auto el : ways) {
-      if (home_id == el.id) {
-        move_to(cardinal_to_tile(m_current_tile, el.cardin));
+      if (home_id == el.first) {
+        move_to(cardinal_to_tile(m_current_tile, el.second));
         break;
       }
     }
