@@ -12,8 +12,9 @@ public:
 
   ~field();
   field(const city_map &map);
+  void add_humans(const std::vector<human *> vec);
 
-  const field_container &get() { return m_field; };
+  const field_container &get() { return m_field; }
 
 private:
   field_container m_field;

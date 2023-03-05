@@ -1,4 +1,5 @@
 #include "simulator.hpp"
+#include "pch.hpp"
 
 namespace sprsim {
 simulator::~simulator() {
@@ -24,6 +25,8 @@ void simulator::create_humans() {
   m_all_humans.reserve(humans_count);
   for (long i = 0; i < humans_count; i++)
     m_all_humans.push_back(new human());
+
+  m_field.add_humans(m_all_humans);
 }
 
 void simulator::simulation_loop() {
@@ -33,11 +36,18 @@ void simulator::simulation_loop() {
   const simtime_t sim_time =
       (sim_years * 365 + sim_months * 30 + sim_days) * 1440;
 
+  std::priority_queue<human *, std::deque<human *>, human_compare> humans_queue(
+      m_all_humans.begin(), m_all_humans.end());
   for (simtime_t curr_time = 0; curr_time < sim_time; curr_time++) {
-    if (curr_time % 1000 == 0) {
-      // system("clear");
-      std::cout << "Current time " << curr_time << std::endl;
+    if (curr_time % 1 == 0) {
+      std::cout << "Current time " << curr_time << "/" << sim_time << "\n";
       m_display->showField(m_field);
+    }
+    while (humans_queue.top()->get_next_action() <= curr_time) {
+      human *tmp = humans_queue.top();
+      humans_queue.pop();
+      tmp->do_action();
+      humans_queue.push(tmp);
     }
   }
 }
