@@ -94,7 +94,6 @@ static tile *cardinal_to_tile(tile *t, cardinals card) {
 }
 
 void human::do_action() {
-  std::cout << "Next action time: " << m_next_action_time << "\n";
   if (m_current_tile == nullptr)
     throw std::runtime_error("Human not at any tile" LOCATION);
 
