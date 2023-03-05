@@ -139,6 +139,13 @@ void field::add_humans(const std::vector<human *> vec) {
         hospitals.push_back(el);
     }
 
+  if (homes.size() == 0)
+    throw std::runtime_error("There no homes in town" LOCATION);
+  if (works.size() == 0)
+    throw std::runtime_error("There no works in town" LOCATION);
+  if (hospitals.size() == 0)
+    throw std::runtime_error("There no hospitals in town" LOCATION);
+
   for (std::size_t i = 0; i < vec.size(); i++) {
     auto home = homes.at(i % homes.size());
     auto work = works.at(i % works.size());
