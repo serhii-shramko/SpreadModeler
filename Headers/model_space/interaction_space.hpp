@@ -10,6 +10,7 @@ public:
   interaction_space();
 
   void check_infection(); // TODO: add infection modidiers
+  std::size_t get_number_of_ill();
   bool has_humans();
   void consume_human(human *h);
   void release_human(human *h);

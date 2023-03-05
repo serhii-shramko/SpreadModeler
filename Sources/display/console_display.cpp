@@ -6,9 +6,9 @@ namespace sprsim {
 static char type_to_char(tile_type type) {
   switch (type) {
   case tile_type::EMPTY:
-    return '.';
+    return ' ';
   case tile_type::ROAD:
-    return '#';
+    return '.';
   case tile_type::HOSPITAL:
     return 'H';
   case tile_type::WORK:

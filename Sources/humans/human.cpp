@@ -5,7 +5,22 @@
 
 namespace sprsim {
 
-human::human() : m_next_action_time(0), m_current_target_number(0) {}
+simtime_t *human::current_time = nullptr;
+
+static std::random_device s_dev;
+static std::mt19937 s_rng(s_dev());
+static std::uniform_int_distribution<std::mt19937::result_type> s_dist(0, 100);
+
+human::human()
+    : m_next_action_time(0), m_current_target_number(0), m_recover_time(0) {
+  std::random_device dev;
+  std::mt19937 rng(dev());
+  std::uniform_int_distribution<std::mt19937::result_type> dist(0, 100);
+  if (dist(rng) < 20) {
+    m_is_ill = true;
+    m_recover_time = 10;
+  }
+}
 
 void human::set_position(tile *place) {
   m_current_tile = place;
@@ -15,6 +30,18 @@ void human::set_position(tile *place) {
 void human::set_registration(registration regs) {
   m_registration = regs;
   m_current_target = regs.work_id;
+}
+
+void human::get_ill_check(human *h) {
+  bool will_get_ill = s_dist(s_rng) < 20;
+  if (!will_get_ill)
+    return;
+
+  m_current_tile->release_human(this);
+  m_is_ill = true;
+  m_current_tile->consume_human(this);
+
+  m_recover_time = *current_time + 10;
 }
 
 void human::move_to(tile *place) {
@@ -79,6 +106,15 @@ void human::change_target() {
   }
 }
 
+void human::can_recover() {
+  if (m_recover_time > *current_time)
+    return;
+
+  m_current_tile->release_human(this);
+  m_is_ill = false;
+  m_current_tile->consume_human(this);
+}
+
 static tile *cardinal_to_tile(tile *t, cardinals card) {
   switch (card) {
   case cardinals::NORTH:
@@ -94,6 +130,8 @@ static tile *cardinal_to_tile(tile *t, cardinals card) {
 }
 
 void human::do_action() {
+  can_recover();
+
   if (m_current_tile == nullptr)
     throw std::runtime_error("Human not at any tile" LOCATION);
 
@@ -103,13 +141,9 @@ void human::do_action() {
       move_to(find_road());
       return;
     }
-    auto ways = m_current_tile->get_ways();
-    for (auto el : ways) {
-      if (m_current_target == el.first) {
-        move_to(cardinal_to_tile(m_current_tile, el.second));
-        break;
-      }
-    }
+
+    move_to(cardinal_to_tile(m_current_tile,
+                             m_current_tile->get_way(m_current_target)));
   } else {
     change_target();
   }

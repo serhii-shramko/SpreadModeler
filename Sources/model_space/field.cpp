@@ -157,4 +157,20 @@ void field::add_humans(const std::vector<human *> vec) {
   }
 }
 
+void field::check_infection() {
+  for (auto &row : m_field)
+    for (auto &el : row)
+      el->check_infection();
+}
+
+std::size_t field::get_number_of_ill() {
+  std::size_t number_of_ill = 0;
+
+  for (auto &row : m_field)
+    for (auto &el : row)
+      number_of_ill += el->get_number_of_ill();
+
+  return number_of_ill;
+}
+
 } // namespace sprsim

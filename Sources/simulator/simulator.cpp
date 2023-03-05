@@ -38,16 +38,23 @@ void simulator::simulation_loop() {
 
   std::priority_queue<human *, std::deque<human *>, human_compare> humans_queue(
       m_all_humans.begin(), m_all_humans.end());
-  for (simtime_t curr_time = 0; curr_time < sim_time; curr_time++) {
+
+  simtime_t curr_time = 0;
+  human::current_time = &curr_time;
+  for (; curr_time < sim_time; curr_time++) {
     if (curr_time % 1 == 0) {
-      std::cout << "Current time " << curr_time << "/" << sim_time << "\n";
+      std::cout << "Current time " << curr_time << "/" << sim_time << "\n"
+                << "Number of ill: " << m_field.get_number_of_ill() << "\n";
       m_display->showField(m_field);
     }
-    while (humans_queue.top()->get_next_action() <= curr_time) {
+    while (humans_queue.top()->get_next_action_time() <= curr_time) {
       human *tmp = humans_queue.top();
       humans_queue.pop();
       tmp->do_action();
       humans_queue.push(tmp);
+    }
+    if (curr_time % 1 == 0) {
+      m_field.check_infection();
     }
   }
 }

@@ -12,6 +12,7 @@ public:
   using ways = std::unordered_map<unsigned long, cardinals>;
 
   virtual ~tile() = default;
+  cardinals get_way(unsigned long id);
 
   unsigned long get_id() { return m_id; }
 
@@ -32,7 +33,9 @@ public:
     return b;
   }
 
-  ways get_ways() { return m_ways; }
+  void check_infection() { m_space.check_infection(); }
+
+  std::size_t get_number_of_ill(){return m_space.get_number_of_ill();}
 
 protected:
   tile(unsigned long id, tile_type type);
