@@ -1,14 +1,20 @@
 #include "human.hpp"
+#include "macroses.hpp"
 #include "pch.hpp"
 #include "tile.hpp"
 
 namespace sprsim {
 
-human::human() {}
+human::human() : m_next_action_time(0), m_current_target_number(0) {}
 
 void human::set_position(tile *place) {
   m_current_tile = place;
   m_current_tile->consume_human(this);
+}
+
+void human::set_registration(registration regs) {
+  m_registration = regs;
+  m_current_target = regs.work_id;
 }
 
 void human::move_to(tile *place) {
@@ -36,6 +42,43 @@ tile *human::find_road() {
   return dirs.north;
 }
 
+void human::change_target() {
+  static const int s_number_of_targets_repeat = 2;
+  switch (m_current_target_number) {
+  case 0:
+    m_next_action_time += 480;
+    break;
+  case 1:
+    m_next_action_time += 960;
+    break;
+  case s_number_of_targets_repeat:
+    m_next_action_time += 120;
+    break;
+  default:
+    m_next_action_time += 10;
+  }
+
+  if (m_is_ill) {
+    m_current_target = m_registration.hospital_id;
+    m_current_target_number = s_number_of_targets_repeat;
+    return;
+  }
+
+  m_current_target_number++;
+  m_current_target_number %= s_number_of_targets_repeat;
+  switch (m_current_target_number) {
+  case 0:
+    m_current_target = m_registration.work_id;
+    break;
+  case 1:
+    m_current_target = m_registration.home_id;
+    break;
+  default:
+    m_current_target = m_registration.home_id;
+    break;
+  }
+}
+
 static tile *cardinal_to_tile(tile *t, cardinals card) {
   switch (card) {
   case cardinals::NORTH:
@@ -51,37 +94,25 @@ static tile *cardinal_to_tile(tile *t, cardinals card) {
 }
 
 void human::do_action() {
-  if (current_state == 0) {
-    if (m_current_tile->get_id() == m_registration.work_id) {
-      current_state = 1;
+  std::cout << "Next action time: " << m_next_action_time << "\n";
+  if (m_current_tile == nullptr)
+    throw std::runtime_error("Human not at any tile" LOCATION);
+
+  if (m_current_tile->get_id() != m_current_target) {
+    m_next_action_time += 5;
+    if (m_current_tile->get_type() != tile_type::ROAD) {
       move_to(find_road());
       return;
     }
-    if (m_current_tile->get_type() != tile_type::ROAD)
-      move_to(find_road());
     auto ways = m_current_tile->get_ways();
     for (auto el : ways) {
-      if (m_registration.work_id == el.first) {
+      if (m_current_target == el.first) {
         move_to(cardinal_to_tile(m_current_tile, el.second));
         break;
       }
     }
-  }
-  if (current_state == 1) {
-    if (m_current_tile->get_id() == m_registration.home_id) {
-      current_state = 0;
-      move_to(find_road());
-      return;
-    }
-    if (m_current_tile->get_type() != tile_type::ROAD)
-      move_to(find_road());
-    auto ways = m_current_tile->get_ways();
-    for (auto el : ways) {
-      if (m_registration.home_id == el.first) {
-        move_to(cardinal_to_tile(m_current_tile, el.second));
-        break;
-      }
-    }
+  } else {
+    change_target();
   }
 }
 

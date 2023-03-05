@@ -4,9 +4,9 @@ namespace sprsim {
 class tile;
 
 struct directions {
-  tile *north;
-  tile *west;
-  tile *east;
-  tile *south;
+  tile *north = nullptr;
+  tile *west = nullptr;
+  tile *east = nullptr;
+  tile *south = nullptr;
 };
 } // namespace sprsim
