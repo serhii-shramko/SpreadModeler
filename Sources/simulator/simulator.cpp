@@ -21,10 +21,15 @@ void simulator::run() {
 }
 
 void simulator::create_humans() {
-  const long humans_count = m_config.get<long>("humans_count");
-  m_all_humans.reserve(humans_count);
-  for (long i = 0; i < humans_count; i++)
-    m_all_humans.push_back(new human());
+  const long humans_ill = m_config.get<long>("humans_ill");
+  const long humans_healthy = m_config.get<long>("humans_healthy");
+
+  m_all_humans.reserve(humans_healthy + humans_ill);
+  for (long i = 0; i < humans_ill; i++)
+    m_all_humans.push_back(new human(true));
+
+  for (long i = 0; i < humans_healthy; i++)
+    m_all_humans.push_back(new human(false));
 
   m_field.add_humans(m_all_humans);
 }

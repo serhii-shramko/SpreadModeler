@@ -11,14 +11,16 @@ static std::random_device s_dev;
 static std::mt19937 s_rng(s_dev());
 static std::uniform_int_distribution<std::mt19937::result_type> s_dist(0, 100);
 
-human::human()
-    : m_next_action_time(0), m_current_target_number(0), m_recover_time(0) {
+human::human(bool is_ill)
+    : m_next_action_time(0), m_recover_time(0), m_current_target_number(0),
+      m_is_ill(is_ill) {
+  m_is_ill = is_ill;
+
   std::random_device dev;
   std::mt19937 rng(dev());
   std::uniform_int_distribution<std::mt19937::result_type> dist(0, 100);
   if (dist(rng) < 20) {
-    m_is_ill = true;
-    m_recover_time = 10;
+    m_recover_time = 100;
   }
 }
 
@@ -41,7 +43,7 @@ void human::get_ill_check(human *h) {
   m_is_ill = true;
   m_current_tile->consume_human(this);
 
-  m_recover_time = *current_time + 10;
+  m_recover_time = *current_time + 100;
 }
 
 void human::move_to(tile *place) {

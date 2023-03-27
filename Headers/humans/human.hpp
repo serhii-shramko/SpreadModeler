@@ -11,7 +11,7 @@ public:
   static simtime_t *current_time;
 
 public:
-  human();
+  human(bool is_ill = false);
   void do_action();
   void set_position(tile *place);
   void set_registration(registration regs);
@@ -33,11 +33,11 @@ private:
 private:
   simtime_t m_next_action_time;
   simtime_t m_recover_time;
+  int m_current_target_number;
   bool m_is_ill;
   tile *m_current_tile;
   registration m_registration;
   unsigned long m_current_target;
-  int m_current_target_number;
 };
 
 struct human_compare {
