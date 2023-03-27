@@ -1,4 +1,5 @@
 #include "human.hpp"
+#include "human_target.hpp"
 #include "macroses.hpp"
 #include "pch.hpp"
 #include "tile.hpp"
@@ -72,15 +73,14 @@ tile *human::find_road() {
 }
 
 void human::change_target() {
-  static const int s_number_of_targets_repeat = 2;
   switch (m_current_target_number) {
-  case 0:
+  case human_target::WORK_TARGET:
     m_next_action_time += 480;
     break;
-  case 1:
+  case human_target::HOME_TARGET:
     m_next_action_time += 960;
     break;
-  case s_number_of_targets_repeat:
+  case human_target::HOSPITAL_TARGET:
     m_next_action_time += 120;
     break;
   default:
@@ -89,17 +89,17 @@ void human::change_target() {
 
   if (m_is_ill) {
     m_current_target = m_registration.hospital_id;
-    m_current_target_number = s_number_of_targets_repeat;
+    m_current_target_number = human_target::HOSPITAL_TARGET;
     return;
   }
 
   m_current_target_number++;
-  m_current_target_number %= s_number_of_targets_repeat;
+  m_current_target_number %= human_target::MAX_REPEAT_TARGET;
   switch (m_current_target_number) {
-  case 0:
+  case human_target::WORK_TARGET:
     m_current_target = m_registration.work_id;
     break;
-  case 1:
+  case human_target::HOME_TARGET:
     m_current_target = m_registration.home_id;
     break;
   default:
