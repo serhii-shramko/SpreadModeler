@@ -4,7 +4,7 @@
 
 namespace sprsim {
 
-tile::tile(unsigned long id, tile_type type) : m_id(id), m_type(type) {}
+tile::tile(unsigned long id, tile_type type,std::size_t cols) : m_id(id), m_type(type),m_cols(cols) {}
 
 cardinals tile::get_way(unsigned long id) {
   try {

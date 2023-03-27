@@ -5,6 +5,6 @@
 namespace sprsim {
 class empty : public tile {
 public:
-  empty(unsigned long id);
+  empty(unsigned long id, std::size_t cols);
 };
 } // namespace sprsim

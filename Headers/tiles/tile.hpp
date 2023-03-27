@@ -35,10 +35,16 @@ public:
 
   void check_infection() { m_space.check_infection(); }
 
-  std::size_t get_number_of_ill(){return m_space.get_number_of_ill();}
+  std::size_t get_number_of_ill() { return m_space.get_number_of_ill(); }
+
+  auto get_pos() {
+    std::size_t x = m_id / m_cols;
+    std::size_t y = m_id % m_cols;
+    return std::pair(x, y);
+  }
 
 protected:
-  tile(unsigned long id, tile_type type);
+  tile(unsigned long id, tile_type type, std::size_t cols);
 
 protected:
   unsigned long m_id;
@@ -46,5 +52,6 @@ protected:
   interaction_space m_space;
   directions m_directions;
   ways m_ways;
+  std::size_t m_cols;
 };
 } // namespace sprsim

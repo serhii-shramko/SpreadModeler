@@ -3,6 +3,6 @@
 
 namespace sprsim {
 
-road::road(unsigned long id) : tile(id, tile_type::ROAD) {}
+road::road(unsigned long id, std::size_t cols) : tile(id, tile_type::ROAD,cols) {}
 
 } // namespace sprsim

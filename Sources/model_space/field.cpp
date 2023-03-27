@@ -116,7 +116,7 @@ field::field(const city_map &map) {
     std::vector<tile *> temp;
     temp.reserve(line.size());
     for (auto c : line) {
-      temp.push_back(char_to_tile(c, id));
+      temp.push_back(char_to_tile(c, id, line.size()));
       id++;
     }
     m_field.emplace_back(std::move(temp));

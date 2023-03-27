@@ -58,7 +58,7 @@ void simulator::simulation_loop() {
       tmp->do_action();
       humans_queue.push(tmp);
     }
-    if (curr_time % 1 == 0) {
+    if (curr_time % 100 == 0) {
       m_field.check_infection();
     }
   }

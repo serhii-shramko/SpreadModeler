@@ -3,6 +3,6 @@
 
 namespace sprsim {
 
-hospital::hospital(unsigned long id) : tile(id, tile_type::HOSPITAL) {}
+hospital::hospital(unsigned long id, std::size_t cols) : tile(id, tile_type::HOSPITAL,cols) {}
 
 } // namespace sprsim

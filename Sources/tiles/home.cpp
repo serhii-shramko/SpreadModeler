@@ -3,6 +3,6 @@
 
 namespace sprsim {
 
-home::home(unsigned long id) : tile(id, tile_type::HOME) {}
+home::home(unsigned long id, std::size_t cols) : tile(id, tile_type::HOME,cols) {}
 
 } // namespace sprsim

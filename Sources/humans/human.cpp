@@ -1,10 +1,15 @@
 #include "human.hpp"
 #include "human_target.hpp"
+#include "ill_chance.hpp"
+#include "ill_logger.hpp"
 #include "macroses.hpp"
 #include "pch.hpp"
 #include "tile.hpp"
 
 namespace sprsim {
+
+static ill_logger ill_log;
+static ill_logger recovery_log("recovery.log");
 
 simtime_t *human::current_time = nullptr;
 
@@ -15,14 +20,8 @@ static std::uniform_int_distribution<std::mt19937::result_type> s_dist(0, 100);
 human::human(bool is_ill)
     : m_next_action_time(0), m_recover_time(0), m_current_target_number(0),
       m_is_ill(is_ill) {
-  m_is_ill = is_ill;
-
-  std::random_device dev;
-  std::mt19937 rng(dev());
-  std::uniform_int_distribution<std::mt19937::result_type> dist(0, 100);
-  if (dist(rng) < 20) {
+  if (m_is_ill)
     m_recover_time = 100;
-  }
 }
 
 void human::set_position(tile *place) {
@@ -35,16 +34,40 @@ void human::set_registration(registration regs) {
   m_current_target = regs.work_id;
 }
 
+bool human::will_get_ill() { return ill_chance(0.1).worked(); }
+
+static std::random_device s_dev1;
+static std::mt19937 s_rng1(s_dev1());
+static std::uniform_int_distribution<std::mt19937::result_type>
+    s_dist1(0, 1000);
+
 void human::get_ill_check(human *h) {
-  bool will_get_ill = s_dist(s_rng) < 20;
-  if (!will_get_ill)
+  if (!will_get_ill())
     return;
 
   m_current_tile->release_human(this);
   m_is_ill = true;
   m_current_tile->consume_human(this);
 
-  m_recover_time = *current_time + 100;
+  m_recover_time = *current_time + 100 + s_dist1(s_rng1);
+
+  auto [x, y] = m_current_tile->get_pos();
+  ill_log.log(*current_time, x, y, m_current_tile->get_type());
+}
+
+void human::can_recover() {
+  if (!m_is_ill)
+    return;
+  if (m_recover_time > *current_time)
+    return;
+
+  m_current_tile->release_human(this);
+  m_is_ill = false;
+  m_current_tile->consume_human(this);
+  m_recover_time += 10000;
+
+  auto [x, y] = m_current_tile->get_pos();
+  recovery_log.log(*current_time, x, y, m_current_tile->get_type());
 }
 
 void human::move_to(tile *place) {
@@ -106,15 +129,6 @@ void human::change_target() {
     m_current_target = m_registration.home_id;
     break;
   }
-}
-
-void human::can_recover() {
-  if (m_recover_time > *current_time)
-    return;
-
-  m_current_tile->release_human(this);
-  m_is_ill = false;
-  m_current_tile->consume_human(this);
 }
 
 static tile *cardinal_to_tile(tile *t, cardinals card) {

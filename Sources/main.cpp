@@ -1,11 +1,11 @@
-#include "pch.hpp"
 #include "console_display.hpp"
+#include "pch.hpp"
 #include "simulator.hpp"
 
 int main() {
   try {
-    sprsim::city_map map("test.map");
     sprsim::config config("test.config");
+    sprsim::city_map map(config.get<std::string>("map_filename"));
     std::unique_ptr<sprsim::Idisplay> display =
         std::make_unique<sprsim::console_dislpay>();
     sprsim::simulator sim(std::move(display), config, map);

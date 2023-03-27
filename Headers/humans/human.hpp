@@ -26,6 +26,7 @@ private:
   tile *find_road();
   void change_target();
   void can_recover();
+  bool will_get_ill();
 
 private:
   friend struct human_compare;
