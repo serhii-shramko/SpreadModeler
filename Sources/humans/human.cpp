@@ -1,15 +1,15 @@
 #include "human.hpp"
 #include "human_target.hpp"
 #include "ill_chance.hpp"
-#include "ill_logger.hpp"
+#include "inf_logger.hpp"
 #include "macroses.hpp"
 #include "pch.hpp"
 #include "tile.hpp"
 
 namespace sprsim {
 
-static ill_logger ill_log;
-static ill_logger recovery_log("recovery.log");
+static inf_logger ill_log("ill.log");
+static inf_logger recovery_log("recovery.log");
 
 simtime_t *human::current_time = nullptr;
 

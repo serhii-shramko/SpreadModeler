@@ -5,9 +5,9 @@
 #include <fstream>
 
 namespace sprsim {
-class ill_logger {
+class inf_logger {
 public:
-  ill_logger(std::string filename = "ill.log");
+  inf_logger(std::string filename);
   void log(simtime_t time, std::size_t x, std::size_t y, tile_type tt);
 
 private:
