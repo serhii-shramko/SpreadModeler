@@ -34,12 +34,7 @@ void human::set_registration(registration regs) {
   m_current_target = regs.work_id;
 }
 
-bool human::will_get_ill() { return ill_chance(0.1).worked(); }
-
-static std::random_device s_dev1;
-static std::mt19937 s_rng1(s_dev1());
-static std::uniform_int_distribution<std::mt19937::result_type>
-    s_dist1(0, 1000);
+bool human::will_get_ill() { return ill_chance(100ULL).worked(); }
 
 void human::get_ill_check(human *h) {
   if (!will_get_ill())
@@ -49,13 +44,13 @@ void human::get_ill_check(human *h) {
   m_is_ill = true;
   m_current_tile->consume_human(this);
 
-  m_recover_time = *current_time + 100 + s_dist1(s_rng1);
+  m_recover_time = *current_time + 100 + ill_chance(300ULL).get_num();
 
   auto [x, y] = m_current_tile->get_pos();
   ill_log.log(*current_time, x, y, m_current_tile->get_type());
 }
 
-void human::can_recover() {
+void human::recover_if_can() {
   if (!m_is_ill)
     return;
   if (m_recover_time > *current_time)
@@ -146,8 +141,6 @@ static tile *cardinal_to_tile(tile *t, cardinals card) {
 }
 
 void human::do_action() {
-  can_recover();
-
   if (m_current_tile == nullptr)
     throw std::runtime_error("Human not at any tile" LOCATION);
 

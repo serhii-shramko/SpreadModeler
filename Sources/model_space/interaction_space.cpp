@@ -8,6 +8,12 @@ namespace sprsim {
 interaction_space::interaction_space() {}
 
 void interaction_space::check_infection() {
+  {
+    auto copy_ill_humans = m_ill_humans;
+    for (auto &ill_h : copy_ill_humans) {
+      ill_h->recover_if_can();
+    }
+  }
   auto copy_m_healthy_humans = m_healthy_humans;
   auto copy_m_ill_humans = m_ill_humans;
   for (auto &health_h : copy_m_healthy_humans) {

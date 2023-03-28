@@ -50,7 +50,7 @@ void simulator::simulation_loop() {
     if (curr_time % 1 == 0) {
       std::cout << "Current time " << curr_time << "/" << sim_time << "\n"
                 << "Number of ill: " << m_field.get_number_of_ill() << "\n";
-      m_display->showField(m_field);
+      //m_display->showField(m_field);
     }
     while (humans_queue.top()->get_next_action_time() <= curr_time) {
       human *tmp = humans_queue.top();
@@ -58,7 +58,7 @@ void simulator::simulation_loop() {
       tmp->do_action();
       humans_queue.push(tmp);
     }
-    if (curr_time % 100 == 0) {
+    if (curr_time % 10 == 0) {
       m_field.check_infection();
     }
   }
