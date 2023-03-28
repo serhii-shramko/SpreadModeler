@@ -8,8 +8,9 @@ public:
   ill_chance(unsigned long long chance);
   ill_chance(double chance);
   bool worked();
-  unsigned long long get_num();
   ill_chance operator*(const ill_chance &obj);
+
+  static unsigned long long get_num(unsigned long long max);
 
 private:
   unsigned long long m_chance;

@@ -20,8 +20,8 @@ bool ill_chance::worked() {
     return false;
 }
 
-unsigned long long ill_chance::get_num() {
-  std::uniform_int_distribution<std::mt19937::result_type> dist(0, m_chance);
+unsigned long long ill_chance::get_num(unsigned long long max) {
+  std::uniform_int_distribution<std::mt19937::result_type> dist(0, max);
   return dist(s_rng);
 }
 

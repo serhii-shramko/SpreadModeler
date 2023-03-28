@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ill_chance.hpp"
 #include "registration.hpp"
 #include "types.hpp"
 
@@ -9,6 +10,9 @@ class tile;
 class human {
 public:
   static simtime_t *current_time;
+  static long s_recover_time_min;
+  static long s_recover_time_max;
+  static ill_chance s_base_ill_chance;
 
 public:
   human(bool is_ill = false);
