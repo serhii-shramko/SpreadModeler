@@ -11,6 +11,7 @@ class tile {
 public:
   using ways = std::unordered_map<unsigned long, cardinals>;
 
+  tile(unsigned long id, tile_type type, std::size_t cols);
   virtual ~tile() = default;
   cardinals get_way(unsigned long id);
 
@@ -42,9 +43,6 @@ public:
     std::size_t y = m_id % m_cols;
     return std::pair(x, y);
   }
-
-protected:
-  tile(unsigned long id, tile_type type, std::size_t cols);
 
 protected:
   unsigned long m_id;
