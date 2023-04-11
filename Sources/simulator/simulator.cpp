@@ -12,6 +12,10 @@ simulator::simulator(std::unique_ptr<Idisplay> &&display, config config,
                      const city_map &map)
     : m_config(config), m_field(map) {
   m_display = std::move(display);
+  tile::road_modifier = m_config.get<double>("road_modifier");
+  tile::work_modifier = m_config.get<double>("work_modifier");
+  tile::hospital_modifier = m_config.get<double>("hospital_modifier");
+  tile::home_modifier = m_config.get<double>("home_modifier");
 }
 
 void simulator::run() {

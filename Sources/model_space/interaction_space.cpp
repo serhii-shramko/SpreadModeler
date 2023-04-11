@@ -7,7 +7,7 @@ namespace sprsim {
 
 interaction_space::interaction_space() {}
 
-void interaction_space::check_infection() {
+void interaction_space::check_infection(const ill_chance &tile_modifier) {
   {
     auto copy_ill_humans = m_ill_humans;
     for (auto &ill_h : copy_ill_humans) {
@@ -18,7 +18,7 @@ void interaction_space::check_infection() {
   auto copy_m_ill_humans = m_ill_humans;
   for (auto &health_h : copy_m_healthy_humans) {
     for (auto &ill_h : copy_m_ill_humans) {
-      health_h->get_ill_check(ill_h);
+      health_h->get_ill_check(ill_h, tile_modifier);
     }
   }
 }

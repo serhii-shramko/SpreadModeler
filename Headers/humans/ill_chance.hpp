@@ -1,5 +1,7 @@
 #pragma once
 
+namespace sprsim {
+  
 #define ILL_CHANCE_BASE 10000
 
 class ill_chance {
@@ -15,3 +17,4 @@ public:
 private:
   unsigned long long m_chance;
 };
+} // namespace sprsim

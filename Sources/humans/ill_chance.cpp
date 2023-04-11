@@ -1,6 +1,8 @@
 #include "ill_chance.hpp"
 #include "pch.hpp"
 
+namespace sprsim {
+
 static std::random_device s_dev;
 static std::mt19937 s_rng(s_dev());
 static std::uniform_int_distribution<std::mt19937::result_type>
@@ -28,3 +30,5 @@ unsigned long long ill_chance::get_num(unsigned long long max) {
 ill_chance ill_chance::operator*(const ill_chance &obj) {
   return ill_chance((m_chance * obj.m_chance) / ILL_CHANCE_BASE);
 }
+
+} // namespace sprsim
