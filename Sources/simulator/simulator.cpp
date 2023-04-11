@@ -62,11 +62,9 @@ void simulator::simulation_loop() {
   simtime_t curr_time = 0;
   human::current_time = &curr_time;
   for (; curr_time < sim_time; curr_time++) {
-    if (curr_time % 1 == 0) {
+    if (display_on && (curr_time % display_tick == 0)) {
       std::cout << "Current time " << curr_time << "/" << sim_time << "\n"
                 << "Number of ill: " << m_field.get_number_of_ill() << "\n";
-    }
-    if (display_on && (curr_time % display_tick == 0)) {
       m_display->showField(m_field);
     }
     while (humans_queue.top()->get_next_action_time() <= curr_time) {
