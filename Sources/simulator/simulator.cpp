@@ -24,7 +24,8 @@ void simulator::run() {
 void simulator::create_humans() {
   human::s_recover_time_min = m_config.get<long>("recover_time_min");
   human::s_recover_time_max = m_config.get<long>("recover_time_max");
-  human::s_base_ill_chance = ill_chance(m_config.get<double>("infection_chance"));
+  human::s_base_ill_chance =
+      ill_chance(m_config.get<double>("infection_chance"));
 
   const long humans_ill = m_config.get<long>("humans_ill");
   const long humans_healthy = m_config.get<long>("recover_time_max");
@@ -51,13 +52,18 @@ void simulator::simulation_loop() {
   std::priority_queue<human *, std::deque<human *>, human_compare> humans_queue(
       m_all_humans.begin(), m_all_humans.end());
 
+  bool display_on = m_config.get<long>("display_on");
+  long display_tick = m_config.get<long>("display_tick");
+
   simtime_t curr_time = 0;
   human::current_time = &curr_time;
   for (; curr_time < sim_time; curr_time++) {
     if (curr_time % 1 == 0) {
       std::cout << "Current time " << curr_time << "/" << sim_time << "\n"
                 << "Number of ill: " << m_field.get_number_of_ill() << "\n";
-      // m_display->showField(m_field);
+    }
+    if (display_on && (curr_time % display_tick == 0)) {
+      m_display->showField(m_field);
     }
     while (humans_queue.top()->get_next_action_time() <= curr_time) {
       human *tmp = humans_queue.top();
