@@ -32,7 +32,7 @@ void simulator::create_humans() {
       ill_chance(m_config.get<double>("infection_chance"));
 
   const long humans_ill = m_config.get<long>("humans_ill");
-  const long humans_healthy = m_config.get<long>("recover_time_max");
+  const long humans_healthy = m_config.get<long>("humans_healthy");
 
   m_all_humans.reserve(humans_healthy + humans_ill);
   for (long i = 0; i < humans_ill; i++)
