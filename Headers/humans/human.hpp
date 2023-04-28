@@ -38,6 +38,7 @@ private:
 private:
   simtime_t m_next_action_time;
   simtime_t m_recover_time;
+  simtime_t m_next_time_hospital;
   int m_current_target_number;
   bool m_is_ill;
   tile *m_current_tile;

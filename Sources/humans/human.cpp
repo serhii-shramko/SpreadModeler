@@ -23,7 +23,7 @@ static distribution s_dist(0, 100);
 
 human::human(bool is_ill)
     : m_next_action_time(0), m_recover_time(0), m_current_target_number(0),
-      m_is_ill(is_ill) {
+      m_next_time_hospital(0), m_is_ill(is_ill) {
   if (m_is_ill)
     m_recover_time =
         distribution(s_recover_time_min, s_recover_time_max)(s_rng);
@@ -108,12 +108,13 @@ void human::change_target() {
     break;
   case human_target::HOSPITAL_TARGET:
     m_next_action_time += 120;
+    m_next_time_hospital = *current_time + 1200;
     break;
   default:
     m_next_action_time += 10;
   }
 
-  if (m_is_ill) {
+  if (m_is_ill && (m_next_time_hospital < *current_time)) {
     m_current_target = m_registration.hospital_id;
     m_current_target_number = human_target::HOSPITAL_TARGET;
     return;

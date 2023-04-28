@@ -61,10 +61,13 @@ void simulator::simulation_loop() {
 
   simtime_t curr_time = 0;
   human::current_time = &curr_time;
+  std::ofstream currently_ill_file("currently_ill.log");
   for (; curr_time < sim_time; curr_time++) {
+    auto number_of_ill = m_field.get_number_of_ill();
+    currently_ill_file << curr_time << " " << number_of_ill << "\n";
     if (display_on && (curr_time % display_tick == 0)) {
       std::cout << "Current time " << curr_time << "/" << sim_time << "\n"
-                << "Number of ill: " << m_field.get_number_of_ill() << "\n";
+                << "Number of ill: " << number_of_ill << "\n";
       m_display->showField(m_field);
     }
     while (humans_queue.top()->get_next_action_time() <= curr_time) {
