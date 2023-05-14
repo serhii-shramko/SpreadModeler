@@ -1,5 +1,5 @@
-#include "pch.hpp"
 #include "config.hpp"
+#include "pch.hpp"
 
 namespace sprsim {
 
@@ -45,9 +45,13 @@ void config::save(const std::string &file_name) {
     if (const long *pval = std::get_if<long>(&p.second))
       os << *pval;
     if (const double *pval = std::get_if<double>(&p.second))
-      os << *pval;
+      os << std::fixed << std::setprecision(5) << *pval;
     os << '\n';
   }
+}
+
+void config::set(const std::string &key, const var_types &value) {
+  m_map[key] = value;
 }
 
 } // namespace sprsim
