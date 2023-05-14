@@ -23,7 +23,7 @@ static distribution s_dist(0, 100);
 
 human::human(bool is_ill)
     : m_next_action_time(0), m_recover_time(0), m_current_target_number(0),
-      m_next_time_hospital(0), m_is_ill(is_ill) {
+      m_next_time_hospital(0), m_is_ill(is_ill), m_remove_from_model(false) {
   if (m_is_ill)
     m_recover_time =
         distribution(s_recover_time_min, s_recover_time_max)(s_rng);
@@ -66,11 +66,11 @@ void human::recover_if_can() {
 
   m_current_tile->release_human(this);
   m_is_ill = false;
-  m_current_tile->consume_human(this);
-  m_recover_time += 10000;
 
   auto [x, y] = m_current_tile->get_pos();
   recovery_log.log(*current_time, x, y, m_current_tile->get_type());
+  m_remove_from_model = true;
+  m_current_tile = nullptr;
 }
 
 void human::move_to(tile *place) {
@@ -151,7 +151,7 @@ static tile *cardinal_to_tile(tile *t, cardinals card) {
 
 void human::do_action() {
   if (m_current_tile == nullptr)
-    throw std::runtime_error("Human not at any tile" LOCATION);
+    return;
 
   if (m_current_tile->get_id() != m_current_target) {
     m_next_action_time += 5;

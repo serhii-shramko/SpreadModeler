@@ -13,6 +13,7 @@ public:
 
   void check_infection(const ill_chance &tile_modifier);
   std::size_t get_number_of_ill();
+  std::size_t get_number_of_humans();
   bool has_humans();
   void consume_human(human *h);
   void release_human(human *h);

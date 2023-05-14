@@ -67,6 +67,8 @@ void simulator::simulation_loop() {
     currently_ill_file << curr_time << " " << number_of_ill << "\n";
     if (display_on && (curr_time % display_tick == 0)) {
       std::cout << "Current time " << curr_time << "/" << sim_time << "\n"
+                << "Number of humans: " << m_field.get_number_of_humans() << "/"
+                << m_all_humans.size() << "\n"
                 << "Number of ill: " << number_of_ill << "\n";
       m_display->showField(m_field);
     }
@@ -74,7 +76,8 @@ void simulator::simulation_loop() {
       human *tmp = humans_queue.top();
       humans_queue.pop();
       tmp->do_action();
-      humans_queue.push(tmp);
+      if (!tmp->need_remove())
+        humans_queue.push(tmp);
     }
     if (curr_time % infection_check == 0) {
       m_field.check_infection();

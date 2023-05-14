@@ -27,6 +27,10 @@ std::size_t interaction_space::get_number_of_ill() {
   return m_ill_humans.size();
 }
 
+std::size_t interaction_space::get_number_of_humans() {
+  return m_ill_humans.size() + m_healthy_humans.size();
+}
+
 bool interaction_space::has_humans() {
   return (m_ill_humans.size() != 0) || (m_healthy_humans.size() != 0);
 }

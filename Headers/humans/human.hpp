@@ -26,6 +26,8 @@ public:
 
   bool is_ill() { return m_is_ill; }
 
+  bool need_remove() { return m_remove_from_model; }
+
 private:
   void move_to(tile *place);
   tile *find_road();
@@ -44,6 +46,7 @@ private:
   tile *m_current_tile;
   registration m_registration;
   unsigned long m_current_target;
+  bool m_remove_from_model;
 };
 
 struct human_compare {

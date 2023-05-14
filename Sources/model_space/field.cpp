@@ -149,4 +149,14 @@ std::size_t field::get_number_of_ill() {
   return number_of_ill;
 }
 
+std::size_t field::get_number_of_humans() {
+  std::size_t number_of_humans = 0;
+
+  for (auto &row : m_field)
+    for (auto &el : row)
+      number_of_humans += el->get_number_of_humans();
+
+  return number_of_humans;
+}
+
 } // namespace sprsim

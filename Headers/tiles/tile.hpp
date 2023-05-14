@@ -46,6 +46,8 @@ public:
 
   std::size_t get_number_of_ill() { return m_space.get_number_of_ill(); }
 
+  std::size_t get_number_of_humans() { return m_space.get_number_of_humans(); }
+
   auto get_pos() {
     std::size_t x = m_id / m_cols;
     std::size_t y = m_id % m_cols;
