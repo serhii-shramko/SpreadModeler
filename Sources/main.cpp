@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     sprsim::simulator sim(std::move(display), config, map);
     sim.run();
   } catch (const std::exception &ex) {
-    std::cerr << ex.what() << std::endl;
+    std::cerr << "Error: " << ex.what() << std::endl;
     return 1;
   }
   return 0;
