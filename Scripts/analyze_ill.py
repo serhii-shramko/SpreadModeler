@@ -89,7 +89,7 @@ plt.bar(pos, numbers, color="blue")
 plt.xticks(ticks=pos, labels=labels)
 plt.show()
 
-x,y = zip(*currently_ill_in_time.items())
+x, y = zip(*currently_ill_in_time.items())
 
 plt.title("Total ill in time")
 plt.plot(x, y)

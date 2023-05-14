@@ -114,13 +114,17 @@ void simulator::simulation_loop() {
   simtime_t curr_time = 0;
   human::current_time = &curr_time;
   std::ofstream currently_ill_file("currently_ill.log");
+  std::ofstream susceptible_number_file("susceptible_number.log");
   for (; curr_time < sim_time; curr_time++) {
     auto number_of_ill = m_field.get_number_of_ill();
     currently_ill_file << curr_time << " " << number_of_ill << "\n";
+    auto number_of_humans_in_model = m_field.get_number_of_humans();
+    susceptible_number_file << curr_time << " " << number_of_humans_in_model
+                            << "\n";
     if (display_on && (number_of_ill == 0 || (curr_time % display_tick == 0))) {
       std::cout << "Current time: ";
       print_time_formated(curr_time);
-      std::cout << "Number of humans: " << m_field.get_number_of_humans() << "/"
+      std::cout << "Number of humans: " << number_of_humans_in_model << "/"
                 << m_all_humans.size() << "\n"
                 << "Number of ill: " << number_of_ill << "\n";
       m_display->showField(m_field);
