@@ -1,3 +1,22 @@
+import sys
+
+if len(sys.argv) < 3:
+    print(f"Usage {sys.argv[0]} <currently_ill.log> <ill.log>")
+    exit()
+
+currently_ill_log_file_name = sys.argv[1]
+ill_log_file_name = sys.argv[2]
+
+from os.path import exists
+
+if not exists(currently_ill_log_file_name):
+    print(f"{currently_ill_log_file_name} didn't exists")
+    exit()
+
+if not exists(ill_log_file_name):
+    print(f"{ill_log_file_name} didn't exists")
+    exit()
+
 from enum import Enum
 
 
@@ -26,14 +45,14 @@ def check_dict_key_and_add(key, dictionary):
 
 
 currently_ill_in_time = {}
-with open("../Build/currently_ill.log", "r") as file:
+with open(currently_ill_log_file_name, "r") as file:
     for line in file:
         values = line.split(" ")
         time = int(values[0])
         number_of_ill = int(values[1])
         currently_ill_in_time[time] = number_of_ill
 
-with open("../Build/ill.log", "r") as file:
+with open(ill_log_file_name, "r") as file:
     for line in file:
         values = line.split(" ")
         time_get_ill = int(values[0])

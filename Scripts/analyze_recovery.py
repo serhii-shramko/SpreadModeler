@@ -1,3 +1,17 @@
+import sys
+
+if len(sys.argv) < 2:
+    print(f"Usage {sys.argv[0]} <recovery.log>")
+    exit()
+
+recovery_log_file_name = sys.argv[1]
+
+from os.path import exists
+
+if not exists(recovery_log_file_name):
+    print(f"{recovery_log_file_name} didn't exists")
+    exit()
+
 from enum import Enum
 
 
@@ -25,7 +39,7 @@ def check_dict_key_and_add(key, dictionary):
         dictionary[key] += 1
 
 
-with open("../Build/recovery.log", "r") as file:
+with open(recovery_log_file_name, "r") as file:
     for line in file:
         values = line.split(" ")
         time_get_ill = int(values[0])

@@ -1,5 +1,19 @@
+import sys
+
+if len(sys.argv) < 2:
+    print(f"Usage {sys.argv[0]} <susceptible.log>")
+    exit()
+
+susceptible_log_file_name = sys.argv[1]
+
+from os.path import exists
+
+if not exists(susceptible_log_file_name):
+    print(f"{susceptible_log_file_name} didn't exists")
+    exit()
+
 currently_susceptible_in_time = {}
-with open("../Build/susceptible_number.log", "r") as file:
+with open(susceptible_log_file_name, "r") as file:
     for line in file:
         values = line.split(" ")
         time = int(values[0])

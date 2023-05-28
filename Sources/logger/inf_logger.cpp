@@ -2,7 +2,7 @@
 #include "pch.hpp"
 
 namespace sprsim {
-inf_logger::inf_logger(std::string filename) : m_log(filename) {}
+inf_logger::inf_logger(const std::string& filename) : m_log(filename) {}
 
 void inf_logger::log(simtime_t time, std::size_t x, std::size_t y,
                      tile_type tt) {
