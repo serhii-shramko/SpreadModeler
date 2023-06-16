@@ -2,12 +2,6 @@
 #include "human.hpp"
 #include "pch.hpp"
 
-#include "empty.hpp"
-#include "home.hpp"
-#include "hospital.hpp"
-#include "road.hpp"
-#include "work.hpp"
-
 namespace sprsim {
 
 field::~field() {
@@ -15,24 +9,6 @@ field::~field() {
     for (tile *t : vec) {
       delete t;
     }
-  }
-}
-
-template <typename... Args>
-static tile *char_to_tile(char c, Args... args) {
-  switch (city_map::get_type_of(c)) {
-  case tile_type::EMPTY:
-    return new empty(std::forward<Args>(args)...);
-  case tile_type::ROAD:
-    return new road(std::forward<Args>(args)...);
-  case tile_type::WORK:
-    return new work(std::forward<Args>(args)...);
-  case tile_type::HOSPITAL:
-    return new hospital(std::forward<Args>(args)...);
-  case tile_type::HOME:
-    return new home(std::forward<Args>(args)...);
-  default:
-    return new empty(std::forward<Args>(args)...);
   }
 }
 
@@ -116,7 +92,7 @@ field::field(const city_map &map) {
     std::vector<tile *> temp;
     temp.reserve(line.size());
     for (auto c : line) {
-      temp.push_back(char_to_tile(c, id));
+      temp.push_back(new tile(id, city_map::get_type_of(c), line.size()));
       id++;
     }
     m_field.emplace_back(std::move(temp));
@@ -155,6 +131,32 @@ void field::add_humans(const std::vector<human *> vec) {
     vec.at(i)->set_registration(
         registration(work->get_id(), home->get_id(), hospital->get_id()));
   }
+}
+
+void field::check_infection() {
+  for (auto &row : m_field)
+    for (auto &el : row)
+      el->check_infection();
+}
+
+std::size_t field::get_number_of_ill() {
+  std::size_t number_of_ill = 0;
+
+  for (auto &row : m_field)
+    for (auto &el : row)
+      number_of_ill += el->get_number_of_ill();
+
+  return number_of_ill;
+}
+
+std::size_t field::get_number_of_humans() {
+  std::size_t number_of_humans = 0;
+
+  for (auto &row : m_field)
+    for (auto &el : row)
+      number_of_humans += el->get_number_of_humans();
+
+  return number_of_humans;
 }
 
 } // namespace sprsim

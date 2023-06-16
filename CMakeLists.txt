@@ -4,7 +4,9 @@ project(SpreadModeler)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED true)
-set(CMAKE_CXX_COMPILER "g++")
+
+add_subdirectory("./External/googletest")
+add_subdirectory("./Tests")
 
 file(GLOB HEADDIRS "./Headers/*")
 include_directories(${HEADDIRS})

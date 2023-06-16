@@ -4,7 +4,11 @@
 namespace sprsim {
 
 std::unordered_map<char, tile_type> city_map::s_tile_char_map = {
-    {'.', EMPTY}, {'#', ROAD}, {'W', WORK}, {'H', HOSPITAL}, {'^', HOME}};
+    {'.', tile_type::EMPTY},
+    {'#', tile_type::ROAD},
+    {'W', tile_type::WORK},
+    {'H', tile_type::HOSPITAL},
+    {'^', tile_type::HOME}};
 
 tile_type city_map::get_type_of(char c) {
   try {
@@ -17,7 +21,7 @@ tile_type city_map::get_type_of(char c) {
 city_map::city_map(const std::string &filename) {
   std::ifstream ifile(filename);
   if (!ifile.is_open())
-    throw std::runtime_error("Can't open file" LOCATION);
+    throw std::runtime_error("Can't open map file" LOCATION);
 
   std::string line;
   std::getline(ifile, line);

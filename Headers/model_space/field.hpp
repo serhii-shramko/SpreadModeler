@@ -13,6 +13,9 @@ public:
   ~field();
   field(const city_map &map);
   void add_humans(const std::vector<human *> vec);
+  void check_infection();
+  std::size_t get_number_of_ill();
+  std::size_t get_number_of_humans();
 
   const field_container &get() { return m_field; }
 

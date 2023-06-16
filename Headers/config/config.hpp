@@ -17,9 +17,11 @@ public:
   config(const std::string &file_name);
   void load(const std::string &file_name);
   void save(const std::string &file_name);
+  void set(const std::string &key, const var_types &value);
 
   template <typename ValueType>
   ValueType get(const std::string &key) {
+
     try {
       return std::get<ValueType>(m_map.at(key));
     } catch (const std::out_of_range &ex) {
